@@ -961,7 +961,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1821538892}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -33.29, y: 3.97, z: 28.49}
+  m_LocalPosition: {x: -40.3, y: 11.8, z: 25.7}
   m_LocalScale: {x: 1, y: 2.7286, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1111,7 +1111,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1957817759}
   m_LocalRotation: {x: -0, y: 0.19295381, z: -0, w: 0.9812079}
-  m_LocalPosition: {x: 9.54, y: 3.8610697, z: 3.99}
+  m_LocalPosition: {x: 4.32, y: 3.8610697, z: 6.13}
   m_LocalScale: {x: 7.1154065, y: 1, z: 0.57454985}
   m_Children: []
   m_Father: {fileID: 1205427054}
@@ -1273,11 +1273,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f800537a6ad8940a87ff555e58c8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 20
   rb: {fileID: 0}
   curBeacon: {fileID: 0}
-  angleToBeacon: {x: 0, y: 0, z: 0}
   target: {fileID: 1821538896}
+  toVel: 2.5
+  maxVel: 15
+  maxForce: 40
+  gain: 5
 --- !u!1 &1982927016
 GameObject:
   m_ObjectHideFlags: 0

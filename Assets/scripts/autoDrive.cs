@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class autoDrive : MonoBehaviour
 {
-    public float maxSpeed = 20f;
-    private Vector3 turnSpeed;
+    // general rigidbody stuff
     public Rigidbody rb;
     private bool isgrounded;
 
+    // signal-source
     public GameObject curBeacon;
     public Transform target;
 
+    //for driving to a target
+    public float toVel = 2.5f;
+    public float maxVel = 15.0f;
+    public float maxForce = 40.0f;
+    public float gain = 5f;
+
+    //for turning to a target
     private readonly VectorPid angularVelocityController = new VectorPid(33.7766f, 0, 0.2553191f);
     private readonly VectorPid headingController = new VectorPid(9.244681f, 0, 0.06382979f);
 
@@ -20,7 +27,6 @@ public class autoDrive : MonoBehaviour
     {
       rb = this.GetComponent<Rigidbody>();
       curBeacon = GameObject.Find("beacon1");
-      turnSpeed= new Vector3(0, 5, 0);
     }
 
     // Update is called once per frame
@@ -30,28 +36,41 @@ public class autoDrive : MonoBehaviour
     }
     void FixedUpdate()
     {
-      if (isgrounded==true)
+      if (isgrounded==true && Input.GetButton("Jump"))
       {
-        var angularVelocityError = rb.angularVelocity * -1;
-        Debug.DrawRay(transform.position, rb.angularVelocity * 10, Color.black);
-
-        var angularVelocityCorrection = angularVelocityController.Update(angularVelocityError, Time.deltaTime);
-        Debug.DrawRay(transform.position, angularVelocityCorrection, Color.green);
-
-        rb.AddTorque(angularVelocityCorrection);
-
         var desiredHeading = target.position - transform.position;
-        Debug.DrawRay(transform.position, desiredHeading, Color.magenta);
+        desiredHeading.y = 0;
+        steerToTarget(desiredHeading);
+        driveToTarget(desiredHeading);
 
-        var currentHeading = transform.forward;
-        Debug.DrawRay(transform.position, currentHeading * 15, Color.blue);
-
-        var headingError = Vector3.Cross(currentHeading, desiredHeading);
-        var headingCorrection = headingController.Update(headingError, Time.deltaTime);
-
-        rb.AddTorque(headingCorrection);
       }
     }
+
+    void steerToTarget(Vector3 desiredHeading)
+    {
+      var currentHeading = transform.forward;
+      Debug.DrawRay(transform.position, currentHeading * 15, Color.blue);
+      Debug.DrawRay(transform.position, desiredHeading, Color.magenta);
+
+      var headingError = Vector3.Cross(currentHeading, desiredHeading);
+      var headingCorrection = headingController.Update(headingError, Time.deltaTime);
+      rb.AddTorque(headingCorrection);
+
+      var angularVelocityError = rb.angularVelocity * -1;
+      var angularVelocityCorrection = angularVelocityController.Update(angularVelocityError, Time.deltaTime);
+      rb.AddTorque(angularVelocityCorrection);
+    }
+    void driveToTarget(Vector3 desiredHeading)
+    {
+      // calc a target vel proportional to distance (clamped to maxVel)
+      Vector3 tgtVel = Vector3.ClampMagnitude(toVel * desiredHeading, maxVel);
+      // calculate the velocity error
+      Vector3 error = tgtVel - rb.velocity;
+      // calc a force proportional to the error (clamped to maxForce)
+      Vector3 force = Vector3.ClampMagnitude(gain * error, maxForce);
+      rb.AddForce(force);
+    }
+
 
     void OnCollisionEnter(Collision collisionInfo)
     {
@@ -68,6 +87,7 @@ public class autoDrive : MonoBehaviour
       }
     }
 }
+
 
 public class VectorPid
 {
