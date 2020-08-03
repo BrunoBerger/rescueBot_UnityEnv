@@ -10,7 +10,7 @@ public class beaconStuff : MonoBehaviour
     void Start()
     {
       Console.WriteLine("Hello World!");
-      print("sadddddddddddddd");
+
     }
 
     // Update is called once per frame

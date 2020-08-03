@@ -14,8 +14,8 @@ public class autoDrive : MonoBehaviour
 
     //for driving to a target
     public float toVel = 2.5f;
-    public float maxVel = 15.0f;
-    public float maxForce = 40.0f;
+    public float maxVel = 5.0f;
+    public float maxForce = 20.0f;
     public float gain = 5f;
 
     //for turning to a target

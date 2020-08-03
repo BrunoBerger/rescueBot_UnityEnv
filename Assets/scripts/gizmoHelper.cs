@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class gizmoHelper : MonoBehaviour
 {
-    public float gizmoSize = .75f;
-    public Color gizmoColor = Color.yellow;
-
-    void OnDrawGizmos()
+    // public float gizmoSize = .75f;
+    // public Color gizmoColor = Color.yellow;
+    //
+    // void OnDrawGizmos()
+    // {
+    //   Gizmos.color = gizmoColor;
+    //   Gizmos.DrawWireSphere(transform.position, gizmoSize);
+    // }
+    void Update()
     {
-      Gizmos.color = gizmoColor;
-      Gizmos.DrawWireSphere(transform.position, gizmoSize);
+      var currentHeading = transform.forward;
+      Debug.DrawRay(transform.position, currentHeading * 15, Color.blue);
     }
 }
